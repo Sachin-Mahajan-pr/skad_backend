@@ -1,0 +1,141 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('SKAD GROUP Administration') }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --skad-navy: #0A1F44;
+        --skad-deep-navy: #07152F;
+        --skad-gold: #D4AF37;
+        --skad-gold-hover: #B8862D;
+        --skad-offwhite: #F8F7F3;
+        --skad-grey: #F2F3F5;
+        --skad-text: #1E293B;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+
+    #header {
+        background: linear-gradient(135deg, var(--skad-deep-navy) 0%, var(--skad-navy) 100%) !important;
+        color: #FFFFFF !important;
+        padding: 14px 30px !important;
+        border-bottom: 2px solid var(--skad-gold) !important;
+    }
+
+    #header a:link, #header a:visited {
+        color: #FFFFFF !important;
+    }
+
+    #site-name a {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px !important;
+        color: #FFFFFF !important;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    #site-name a::after {
+        content: "BUILD • CONNECT • SCALE";
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        color: var(--skad-gold);
+        background: rgba(212, 175, 55, 0.12);
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    #user-tools {
+        font-size: 13px !important;
+    }
+
+    #user-tools a {
+        color: var(--skad-gold) !important;
+        border-bottom: 1px dotted var(--skad-gold);
+        text-decoration: none;
+    }
+
+    #user-tools a:hover {
+        color: #FFFFFF !important;
+    }
+
+    div.breadcrumbs {
+        background: var(--skad-offwhite) !important;
+        color: #64748B !important;
+        padding: 10px 30px !important;
+        border-bottom: 1px solid #E2E8F0 !important;
+        font-size: 13px !important;
+    }
+
+    div.breadcrumbs a {
+        color: var(--skad-navy) !important;
+        font-weight: 600;
+    }
+
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--skad-navy) !important;
+        color: #FFFFFF !important;
+        border: 1px solid var(--skad-navy) !important;
+        border-radius: 6px !important;
+        padding: 8px 16px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover {
+        background: var(--skad-gold) !important;
+        color: var(--skad-deep-navy) !important;
+        border-color: var(--skad-gold) !important;
+    }
+
+    .button.default, input[type=submit].default, .submit-row input.default {
+        background: var(--skad-gold) !important;
+        color: var(--skad-deep-navy) !important;
+        border-color: var(--skad-gold) !important;
+    }
+
+    .button.default:hover, input[type=submit].default:hover {
+        background: var(--skad-gold-hover) !important;
+        color: #FFFFFF !important;
+    }
+
+    .module h2, .module caption, .inline-group h2 {
+        background: var(--skad-navy) !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
+    #changelist-filter h2 {
+        background: var(--skad-deep-navy) !important;
+        color: #FFFFFF !important;
+    }
+
+    #changelist-filter li.selected a {
+        color: var(--skad-gold) !important;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <span>SKAD GROUP</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

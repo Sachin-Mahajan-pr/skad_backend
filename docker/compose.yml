@@ -1,0 +1,141 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: skad_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-skad_db}
+      POSTGRES_USER: ${DB_USER:-skad_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-skad_secure_password_2026}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-skad_user} -d ${DB_NAME:-skad_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: skad_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: skad_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP port
+      - "8025:8025" # Web UI
+    logging:
+      driver: 'none'
+
+  minio:
+    image: minio/minio:RELEASE.2024-01-18T22-51-28Z
+    container_name: skad_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY:-minioadmin2026}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: skad_web
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ..:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - DEBUG=True
+      - DB_NAME=${DB_NAME:-skad_db}
+      - DB_USER=${DB_USER:-skad_user}
+      - DB_PASSWORD=${DB_PASSWORD:-skad_secure_password_2026}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - EMAIL_HOST=mailhog
+      - EMAIL_PORT=1025
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: skad_celery_worker
+    restart: unless-stopped
+    command: celery -A config worker --loglevel=info
+    volumes:
+      - ..:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - DB_NAME=${DB_NAME:-skad_db}
+      - DB_USER=${DB_USER:-skad_user}
+      - DB_PASSWORD=${DB_PASSWORD:-skad_secure_password_2026}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_beat:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: skad_celery_beat
+    restart: unless-stopped
+    command: celery -A config beat --loglevel=info
+    volumes:
+      - ..:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - DB_NAME=${DB_NAME:-skad_db}
+      - DB_USER=${DB_USER:-skad_user}
+      - DB_PASSWORD=${DB_PASSWORD:-skad_secure_password_2026}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

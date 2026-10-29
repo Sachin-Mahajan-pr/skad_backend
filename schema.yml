@@ -1,0 +1,3973 @@
+openapi: 3.0.3
+info:
+  title: SKAD GROUP Corporate REST API
+  version: 1.0.0
+  description: Complete REST API for the SKAD GROUP corporate website ecosystem. Provides
+    content delivery for Next.js, interactive ecosystem graph, enquiry routing, careers
+    pipeline, governance documents, and SEO sitemaps.
+paths:
+  /api/v1/applications/:
+    post:
+      operationId: v1_applications_create
+      description: |-
+        Submits a candidate job application with resume upload.
+        CV files are safely stored in private storage.
+      tags:
+      - Careers & Talent
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationCreateRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationCreate'
+          description: ''
+  /api/v1/articles/:
+    get:
+      operationId: v1_articles_list
+      parameters:
+      - in: query
+        name: category__slug
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedArticleList'
+          description: ''
+  /api/v1/articles/{slug}/:
+    get:
+      operationId: v1_articles_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+          description: ''
+  /api/v1/brands/:
+    get:
+      operationId: v1_brands_list
+      parameters:
+      - in: query
+        name: capabilities__slug
+        schema:
+          type: string
+      - in: query
+        name: category
+        schema:
+          type: string
+      - in: query
+        name: industries__slug
+        schema:
+          type: string
+      - in: query
+        name: market_scope
+        schema:
+          type: string
+          enum:
+          - india_only
+          - international
+          - regional
+          - unspecified
+        description: |-
+          * `india_only` - India only
+          * `international` - International
+          * `regional` - Regional
+          * `unspecified` - Unspecified
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Consumer Brands Layer
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBrandList'
+          description: ''
+  /api/v1/brands/{slug}/:
+    get:
+      operationId: v1_brands_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Consumer Brands Layer
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Brand'
+          description: ''
+  /api/v1/capabilities/:
+    get:
+      operationId: v1_capabilities_list
+      parameters:
+      - in: query
+        name: group
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Taxonomy & Markets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCapabilityList'
+          description: ''
+  /api/v1/capabilities/{slug}/:
+    get:
+      operationId: v1_capabilities_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Taxonomy & Markets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Capability'
+          description: ''
+  /api/v1/careers/:
+    get:
+      operationId: v1_careers_list
+      parameters:
+      - in: query
+        name: department
+        schema:
+          type: string
+          enum:
+          - ai
+          - commerce
+          - creative
+          - cx
+          - finance
+          - manufacturing
+          - marketing
+          - sales
+          - technology
+          - trade
+        description: |-
+          * `technology` - Technology & Engineering
+          * `ai` - AI & Automation
+          * `commerce` - Commerce & Operations
+          * `creative` - Brand & Creative
+          * `marketing` - Marketing & Growth
+          * `finance` - Finance & Corporate
+          * `sales` - Sales & Partnerships
+          * `manufacturing` - Manufacturing & Supply
+          * `trade` - International Trade
+          * `cx` - Customer Experience
+      - in: query
+        name: employment_type
+        schema:
+          type: string
+          enum:
+          - contract
+          - full_time
+          - internship
+          - part_time
+        description: |-
+          * `full_time` - Full-time
+          * `part_time` - Part-time
+          * `contract` - Contract
+          * `internship` - Internship
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Careers & Talent
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCareerList'
+          description: ''
+  /api/v1/careers/{slug}/:
+    get:
+      operationId: v1_careers_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Careers & Talent
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Career'
+          description: ''
+  /api/v1/case-studies/:
+    get:
+      operationId: v1_case_studies_list
+      parameters:
+      - in: query
+        name: brand__slug
+        schema:
+          type: string
+      - in: query
+        name: company__slug
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCaseStudyList'
+          description: ''
+  /api/v1/case-studies/{slug}/:
+    get:
+      operationId: v1_case_studies_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseStudy'
+          description: ''
+  /api/v1/companies/:
+    get:
+      operationId: v1_companies_list
+      parameters:
+      - in: query
+        name: capabilities__slug
+        schema:
+          type: string
+      - in: query
+        name: country
+        schema:
+          type: string
+      - in: query
+        name: industries__slug
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: sector
+        schema:
+          type: string
+      tags:
+      - Corporate Entities - Companies
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCompanyList'
+          description: ''
+  /api/v1/companies/{slug}/:
+    get:
+      operationId: v1_companies_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Corporate Entities - Companies
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+  /api/v1/documents/:
+    get:
+      operationId: v1_documents_list
+      parameters:
+      - in: query
+        name: doc_type
+        schema:
+          type: string
+          enum:
+          - brand_assets
+          - governance
+          - group_profile
+          - impact_report
+          - media_kit
+          - policy
+          - presentation
+          - report
+        description: |-
+          * `group_profile` - Corporate Profile
+          * `presentation` - Corporate Presentation
+          * `policy` - Corporate Policy / Code of Conduct
+          * `report` - Annual / Operations Report
+          * `impact_report` - Impact & Foundation Report
+          * `media_kit` - Media Kit
+          * `brand_assets` - Brand Guidelines & Assets
+          * `governance` - Governance & Compliance Document
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: visibility
+        schema:
+          type: string
+          enum:
+          - internal
+          - on_request
+          - public
+        description: |-
+          * `public` - Public Download
+          * `on_request` - On Request
+          * `internal` - Internal Only
+      tags:
+      - Governance & Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDocumentList'
+          description: ''
+  /api/v1/documents/{id}/download/:
+    get:
+      operationId: v1_documents_download_retrieve
+      description: Tracked download endpoint that increments download metrics and
+        serves the document.
+      summary: Tracked Document Download
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Governance & Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/v1/documents/{slug}/:
+    get:
+      operationId: v1_documents_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Governance & Documents
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+  /api/v1/ecosystem/:
+    get:
+      operationId: v1_ecosystem_retrieve
+      description: Returns nodes, edges, and accessible list structure for the interactive
+        SKAD ecosystem.
+      summary: SKAD Ecosystem Graph & Fallback
+      tags:
+      - Interactive Ecosystem
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/enquiries/:
+    post:
+      operationId: v1_enquiries_create
+      description: |-
+        Submit a 'Partner With SKAD' or general contact enquiry.
+        Includes honeypot detection, IP hashing, email & IP throttling, and unique reference assignment.
+      tags:
+      - Inbound Inquiries & Routing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnquiryCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EnquiryCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EnquiryCreateRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnquiryCreate'
+          description: ''
+  /api/v1/enquiries/routes/:
+    get:
+      operationId: v1_enquiries_routes_list
+      description: List available active enquiry routing destinations.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Inbound Inquiries & Routing
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnquiryRouteList'
+          description: ''
+  /api/v1/events/:
+    get:
+      operationId: v1_events_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEventList'
+          description: ''
+  /api/v1/events/{slug}/:
+    get:
+      operationId: v1_events_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
+  /api/v1/feature-flags/:
+    get:
+      operationId: v1_feature_flags_retrieve
+      description: |-
+        Feature flag switches per Page 14 of the specification.
+        Controls visibility of modular components: markets_map, people, newsroom, careers, etc.
+      summary: Modular Feature Flags
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/foundation/:
+    get:
+      operationId: v1_foundation_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFoundationList'
+          description: ''
+  /api/v1/foundation/{slug}/:
+    get:
+      operationId: v1_foundation_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foundation'
+          description: ''
+  /api/v1/foundation/initiatives/:
+    get:
+      operationId: v1_foundation_initiatives_list
+      parameters:
+      - in: query
+        name: focus_area
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFoundationInitiativeList'
+          description: ''
+  /api/v1/foundation/initiatives/{slug}/:
+    get:
+      operationId: v1_foundation_initiatives_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoundationInitiative'
+          description: ''
+  /api/v1/groups/:
+    get:
+      operationId: v1_groups_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGroupList'
+          description: ''
+  /api/v1/groups/{slug}/:
+    get:
+      operationId: v1_groups_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: ''
+  /api/v1/health/:
+    get:
+      operationId: v1_health_retrieve
+      summary: Service Health Status
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/industries/:
+    get:
+      operationId: v1_industries_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Taxonomy & Markets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIndustryList'
+          description: ''
+  /api/v1/industries/{slug}/:
+    get:
+      operationId: v1_industries_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Taxonomy & Markets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Industry'
+          description: ''
+  /api/v1/internal/revalidate-hook/:
+    post:
+      operationId: v1_internal_revalidate_hook_create
+      description: |-
+        HMAC-signed internal webhook for triggering cache revalidations.
+        Per page 11 & 20 of SKAD Backend Specification.
+      summary: Internal Revalidation Webhook
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevalidateRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RevalidateRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RevalidateRequestRequest'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/markets/:
+    get:
+      operationId: v1_markets_retrieve
+      description: |-
+        Returns global markets grouped strictly by verification status:
+        active, served, target, future.
+        Evidence note is never leaked.
+      summary: Grouped Global Markets
+      tags:
+      - Taxonomy & Markets
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/media/{id}/:
+    get:
+      operationId: v1_media_retrieve
+      description: |-
+        Asset metadata and derivatives per Page 18:
+        GET /media/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaAsset'
+          description: ''
+  /api/v1/navigation/:
+    get:
+      operationId: v1_navigation_retrieve
+      description: Dynamic navigation tree for Header, Mega Menus, and Footer.
+      summary: Navigation Tree
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/news/:
+    get:
+      operationId: v1_news_list
+      parameters:
+      - in: query
+        name: kind
+        schema:
+          type: string
+          enum:
+          - announcement
+          - foundation
+          - launch
+          - leadership
+          - media_coverage
+          - partnership
+          - press_release
+        description: |-
+          * `announcement` - Announcement
+          * `launch` - Launch
+          * `partnership` - Partnership
+          * `leadership` - Leadership
+          * `foundation` - Foundation
+          * `media_coverage` - Media Coverage
+          * `press_release` - Press Release
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNewsItemList'
+          description: ''
+  /api/v1/news/{slug}/:
+    get:
+      operationId: v1_news_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsItem'
+          description: ''
+  /api/v1/opportunities/:
+    post:
+      operationId: v1_opportunities_create
+      description: Submit a business venture or founder partnership opportunity.
+      tags:
+      - Inbound Inquiries & Routing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpportunityCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OpportunityCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OpportunityCreateRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpportunityCreate'
+          description: ''
+  /api/v1/pages/:
+    get:
+      operationId: v1_pages_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPageList'
+          description: ''
+  /api/v1/pages/{slug}/:
+    get:
+      operationId: v1_pages_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page'
+          description: ''
+  /api/v1/pages/home/:
+    get:
+      operationId: v1_pages_home_retrieve
+      description: Returns the ordered, enabled sections for the homepage.
+      summary: Homepage Composition
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/partners/:
+    get:
+      operationId: v1_partners_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: partner_type
+        schema:
+          type: string
+          enum:
+          - distributor
+          - founder
+          - international
+          - strategic
+          - supplier
+          - technology
+        description: |-
+          * `strategic` - Strategic Partner
+          * `supplier` - Supplier / Manufacturer
+          * `distributor` - Distributor
+          * `technology` - Technology Partner
+          * `international` - International Trade Partner
+          * `founder` - Ecosystem Founder
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartnerList'
+          description: ''
+  /api/v1/partners/{id}/:
+    get:
+      operationId: v1_partners_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Partner.
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+          description: ''
+  /api/v1/people/:
+    get:
+      operationId: v1_people_list
+      parameters:
+      - in: query
+        name: group
+        schema:
+          type: string
+          enum:
+          - advisor
+          - business_head
+          - creative
+          - leadership
+          - management
+          - operations
+          - strategic_expert
+          - technology
+        description: |-
+          * `leadership` - Leadership
+          * `management` - Management
+          * `business_head` - Business Head
+          * `technology` - Technology
+          * `creative` - Creative
+          * `operations` - Operations
+          * `advisor` - Advisor
+          * `strategic_expert` - Strategic Expert
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPersonList'
+          description: ''
+  /api/v1/people/{slug}/:
+    get:
+      operationId: v1_people_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+          description: ''
+  /api/v1/platforms/:
+    get:
+      operationId: v1_platforms_list
+      parameters:
+      - in: query
+        name: capabilities__slug
+        schema:
+          type: string
+      - in: query
+        name: industries__slug
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Platforms & Ventures
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPlatformList'
+          description: ''
+  /api/v1/platforms/{slug}/:
+    get:
+      operationId: v1_platforms_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - Platforms & Ventures
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Platform'
+          description: ''
+  /api/v1/press-releases/:
+    get:
+      operationId: v1_press_releases_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPressReleaseList'
+          description: ''
+  /api/v1/press-releases/{slug}/:
+    get:
+      operationId: v1_press_releases_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PressRelease'
+          description: ''
+  /api/v1/private-download/:
+    get:
+      operationId: v1_private_download_retrieve
+      description: |-
+        Serves cryptographically signed private downloads (CVs, private attachments)
+        when running on local storage or testing. Validates 300-second signature.
+      summary: Signed Private File Download
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/v1/reports/:
+    get:
+      operationId: v1_reports_list
+      parameters:
+      - in: query
+        name: is_public
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: year
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReportList'
+          description: ''
+  /api/v1/reports/{slug}/:
+    get:
+      operationId: v1_reports_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+          description: ''
+  /api/v1/search/:
+    get:
+      operationId: v1_search_retrieve
+      description: Unified multi-entity search endpoint across the SKAD corporate
+        ecosystem.
+      summary: Unified Cross-Entity Search
+      parameters:
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: Search query string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/seo/redirects/:
+    get:
+      operationId: v1_seo_redirects_list
+      description: Returns active redirect map for frontend reverse proxy or middleware.
+      summary: Active SEO 301/302 Redirects
+      tags:
+      - SEO & Discovery
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RedirectItem'
+          description: ''
+  /api/v1/seo/sitemap/:
+    get:
+      operationId: v1_seo_sitemap_list
+      description: |-
+        Returns all indexable canonical URLs with last modified timestamps.
+        Consumed by frontend sitemap.ts generator and search crawlers.
+      summary: Dynamic XML/JSON Sitemap URLs
+      tags:
+      - SEO & Discovery
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SitemapItem'
+          description: ''
+  /api/v1/seo/structured-data/:
+    get:
+      operationId: v1_seo_structured_data_retrieve
+      description: |-
+        Generates canonical JSON-LD Schema.org structured data for the SKAD Group Corporation.
+        Per page 11 & 20 of SKAD Specification.
+      summary: JSON-LD Structured Data Schema
+      tags:
+      - SEO & Discovery
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/site-settings/:
+    get:
+      operationId: v1_site_settings_retrieve
+      description: Global site identity and corporate contact details.
+      summary: Global Site Settings
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/subscriptions/:
+    post:
+      operationId: v1_subscriptions_create
+      description: Newsletter double opt-in subscription submission.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+          description: ''
+  /api/v1/subscriptions/confirm/:
+    get:
+      operationId: v1_subscriptions_confirm_retrieve
+      description: |-
+        Confirm newsletter double opt-in subscription via token.
+        Per page 11: GET /subscriptions/confirm/
+      summary: Confirm Newsletter Subscription
+      parameters:
+      - in: query
+        name: token
+        schema:
+          type: string
+        description: Double opt-in token
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/theme/:
+    get:
+      operationId: v1_theme_retrieve
+      description: |-
+        Approved design system tokens per Page 10 & 16 of the specification.
+        Allows administrators to edit tokens via Admin; falls back to canonical defaults.
+      summary: Brand & Global Design Tokens
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/ui-strings/:
+    get:
+      operationId: v1_ui_strings_retrieve
+      description: Microcopy key/value pairs for frontend localization and instant
+        CMS editing.
+      summary: Microcopy UI Strings
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/ventures/:
+    get:
+      operationId: v1_ventures_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVentureList'
+          description: ''
+  /api/v1/ventures/{slug}/:
+    get:
+      operationId: v1_ventures_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venture'
+          description: ''
+components:
+  schemas:
+    ApplicationCreate:
+      type: object
+      properties:
+        career:
+          type: integer
+          nullable: true
+          description: Null for general profile submissions
+        candidate_name:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 32
+        linkedin_profile:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        cv_file:
+          type: string
+          format: uri
+          description: Candidate CV/resume stored in secure private bucket.
+        cover_letter:
+          type: string
+        consent_recorded:
+          type: boolean
+          description: Consent for processing candidate data during recruitment.
+      required:
+      - candidate_name
+      - consent_recorded
+      - cv_file
+      - email
+    ApplicationCreateRequest:
+      type: object
+      properties:
+        career:
+          type: integer
+          nullable: true
+          description: Null for general profile submissions
+        candidate_name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 32
+        linkedin_profile:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        cv_file:
+          type: string
+          format: binary
+          description: Candidate CV/resume stored in secure private bucket.
+        cover_letter:
+          type: string
+        consent_recorded:
+          type: boolean
+          description: Consent for processing candidate data during recruitment.
+        website:
+          type: string
+          writeOnly: true
+      required:
+      - candidate_name
+      - consent_recorded
+      - cv_file
+      - email
+    ApplicationRouteEnum:
+      enum:
+      - form
+      - external
+      type: string
+      description: |-
+        * `form` - Direct Application Form
+        * `external` - External Career Portal
+    Article:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        category:
+          type: string
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        author_name:
+          type: string
+          readOnly: true
+        hero_image:
+          type: string
+          format: uri
+          nullable: true
+        hero_alt:
+          type: string
+          maxLength: 200
+        excerpt:
+          type: string
+        body:
+          type: string
+        reading_minutes:
+          type: integer
+          maximum: 32767
+          minimum: 0
+          nullable: true
+        publish_at:
+          type: string
+          format: date-time
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - author_name
+      - body
+      - category
+      - slug
+      - tags
+      - title
+    BackgroundEnum:
+      enum:
+      - white
+      - offwhite
+      - navy
+      type: string
+      description: |-
+        * `white` - White
+        * `offwhite` - Warm Off-White
+        * `navy` - Deep Navy
+    Brand:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        tagline:
+          type: string
+          maxLength: 200
+        category:
+          type: string
+          maxLength: 120
+        market_scope:
+          $ref: '#/components/schemas/MarketScopeEnum'
+        positioning:
+          type: string
+        target_market:
+          type: string
+        summary:
+          type: string
+        body:
+          type: string
+          description: Sanitised rich text or markdown description
+        theme:
+          description: 'Custom brand design tokens: palette, display fonts, button
+            style, hero layout.'
+        website_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        cta_label:
+          type: string
+          description: e.g. 'EXPLORE DETARA', 'CREATE YOUR ZEMO', 'VISIT BENAVI'
+          maxLength: 60
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        company:
+          allOf:
+          - $ref: '#/components/schemas/CompanyRef'
+          readOnly: true
+        capabilities:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        industries:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+        canonical_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - capabilities
+      - category
+      - company
+      - industries
+      - name
+      - slug
+    BrandRef:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        tagline:
+          type: string
+          maxLength: 200
+        category:
+          type: string
+          maxLength: 120
+        market_scope:
+          $ref: '#/components/schemas/MarketScopeEnum'
+        cta_label:
+          type: string
+          description: e.g. 'EXPLORE DETARA', 'CREATE YOUR ZEMO', 'VISIT BENAVI'
+          maxLength: 60
+        website_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - category
+      - name
+      - slug
+    Capability:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 140
+          pattern: ^[-a-zA-Z0-9_]+$
+        group:
+          type: string
+          description: 'Domain group: Product, Brand, Technology, Commerce, Manufacturing,
+            Trade, AI, Growth'
+          maxLength: 40
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          description: Concise explanation of the capability. Required to publish.
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - description
+      - group
+      - name
+      - slug
+    Career:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 160
+        department:
+          $ref: '#/components/schemas/DepartmentEnum'
+        department_display:
+          type: string
+          readOnly: true
+        location:
+          type: string
+          description: e.g. Surat, Mumbai, London, Remote
+          maxLength: 120
+        employment_type:
+          $ref: '#/components/schemas/EmploymentTypeEnum'
+        description:
+          type: string
+        requirements:
+          type: string
+        company_name:
+          type: string
+          readOnly: true
+        application_route:
+          $ref: '#/components/schemas/ApplicationRouteEnum'
+        external_apply_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        closes_on:
+          type: string
+          format: date
+          nullable: true
+        publish_at:
+          type: string
+          format: date-time
+      required:
+      - company_name
+      - department
+      - department_display
+      - description
+      - location
+      - slug
+      - title
+    CaseStudy:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        hero_image:
+          type: string
+          format: uri
+          nullable: true
+        summary:
+          type: string
+        challenge:
+          type: string
+        solution:
+          type: string
+        impact_results:
+          type: string
+          description: Verified factual results only; no invented metrics.
+        company_name:
+          type: string
+          readOnly: true
+        brand_name:
+          type: string
+          readOnly: true
+        publish_at:
+          type: string
+          format: date-time
+      required:
+      - brand_name
+      - company_name
+      - impact_results
+      - slug
+      - summary
+      - title
+    Company:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        legal_name:
+          type: string
+          description: Exact legal entity name as registered in corporate filings.
+          maxLength: 200
+        company_type:
+          type: string
+          description: e.g. 'Manufacturing + Diamond Trading', 'International Trade
+            + Commerce Infrastructure'
+          maxLength: 120
+        sector:
+          type: string
+          maxLength: 120
+        city:
+          type: string
+          maxLength: 80
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 code
+          maxLength: 2
+        summary:
+          type: string
+        body:
+          type: string
+          description: Sanitised rich text or markdown description
+        external_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        hero_image:
+          type: string
+          format: uri
+          nullable: true
+        capabilities:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        industries:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        brands:
+          type: array
+          items:
+            $ref: '#/components/schemas/BrandRef'
+          readOnly: true
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+        canonical_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - brands
+      - capabilities
+      - company_type
+      - industries
+      - legal_name
+      - name
+      - sector
+      - slug
+    CompanyRef:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        legal_name:
+          type: string
+          description: Exact legal entity name as registered in corporate filings.
+          maxLength: 200
+        company_type:
+          type: string
+          description: e.g. 'Manufacturing + Diamond Trading', 'International Trade
+            + Commerce Infrastructure'
+          maxLength: 120
+        sector:
+          type: string
+          maxLength: 120
+        city:
+          type: string
+          maxLength: 80
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 code
+          maxLength: 2
+      required:
+      - company_type
+      - legal_name
+      - name
+      - sector
+      - slug
+    DepartmentEnum:
+      enum:
+      - technology
+      - ai
+      - commerce
+      - creative
+      - marketing
+      - finance
+      - sales
+      - manufacturing
+      - trade
+      - cx
+      type: string
+      description: |-
+        * `technology` - Technology & Engineering
+        * `ai` - AI & Automation
+        * `commerce` - Commerce & Operations
+        * `creative` - Brand & Creative
+        * `marketing` - Marketing & Growth
+        * `finance` - Finance & Corporate
+        * `sales` - Sales & Partnerships
+        * `manufacturing` - Manufacturing & Supply
+        * `trade` - International Trade
+        * `cx` - Customer Experience
+    DocTypeEnum:
+      enum:
+      - group_profile
+      - presentation
+      - policy
+      - report
+      - impact_report
+      - media_kit
+      - brand_assets
+      - governance
+      type: string
+      description: |-
+        * `group_profile` - Corporate Profile
+        * `presentation` - Corporate Presentation
+        * `policy` - Corporate Policy / Code of Conduct
+        * `report` - Annual / Operations Report
+        * `impact_report` - Impact & Foundation Report
+        * `media_kit` - Media Kit
+        * `brand_assets` - Brand Guidelines & Assets
+        * `governance` - Governance & Compliance Document
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        doc_type:
+          $ref: '#/components/schemas/DocTypeEnum'
+        doc_type_display:
+          type: string
+          readOnly: true
+        visibility:
+          $ref: '#/components/schemas/VisibilityEnum'
+        current_version:
+          allOf:
+          - $ref: '#/components/schemas/DocumentVersion'
+          readOnly: true
+        download_url:
+          type: string
+          nullable: true
+          readOnly: true
+      required:
+      - current_version
+      - doc_type
+      - doc_type_display
+      - download_url
+      - id
+      - slug
+      - title
+    DocumentVersion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        version_label:
+          type: string
+          description: e.g. 'v1.0 - October 2026'
+          maxLength: 40
+        issued_on:
+          type: string
+          format: date
+        sha256:
+          type: string
+          readOnly: true
+        allow_download:
+          type: boolean
+      required:
+      - id
+      - issued_on
+      - sha256
+      - version_label
+    EmploymentTypeEnum:
+      enum:
+      - full_time
+      - part_time
+      - contract
+      - internship
+      type: string
+      description: |-
+        * `full_time` - Full-time
+        * `part_time` - Part-time
+        * `contract` - Contract
+        * `internship` - Internship
+    EnquiryCreate:
+      type: object
+      properties:
+        reference:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        company:
+          type: string
+          maxLength: 160
+        role:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 32
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 country code
+          maxLength: 2
+        company_website:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        message:
+          type: string
+        attachment:
+          type: string
+          format: uri
+          nullable: true
+          description: Enquiry attachment stored in private bucket per Page 13 & 19.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - country
+      - created_at
+      - email
+      - message
+      - name
+      - reference
+    EnquiryCreateRequest:
+      type: object
+      properties:
+        route_code:
+          type: string
+          writeOnly: true
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        company:
+          type: string
+          maxLength: 160
+        role:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 32
+        country:
+          type: string
+          minLength: 1
+          description: ISO 3166-1 alpha-2 country code
+          maxLength: 2
+        company_website:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        message:
+          type: string
+          minLength: 1
+        attachment:
+          type: string
+          format: binary
+          description: Enquiry attachment stored in private bucket per Page 13 & 19.
+        website:
+          type: string
+          writeOnly: true
+        turnstile_token:
+          type: string
+          writeOnly: true
+      required:
+      - country
+      - email
+      - message
+      - name
+      - route_code
+    EnquiryRoute:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 30
+        label:
+          type: string
+          maxLength: 80
+        active:
+          type: boolean
+          description: Enable or disable this route (e.g. Investment inactive until
+            legally established)
+      required:
+      - code
+      - label
+    Event:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        event_date:
+          type: string
+          format: date-time
+        location:
+          type: string
+          maxLength: 160
+        description:
+          type: string
+        external_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - description
+      - event_date
+      - location
+      - slug
+      - title
+    FolderEnum:
+      enum:
+      - company
+      - brand
+      - people
+      - foundation
+      - platform
+      - general
+      type: string
+      description: |-
+        * `company` - Company
+        * `brand` - Brand
+        * `people` - People
+        * `foundation` - Foundation
+        * `platform` - Platform
+        * `general` - General
+    Foundation:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        mission:
+          type: string
+        summary:
+          type: string
+        body:
+          type: string
+          description: Sanitised rich text or markdown description
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - name
+      - slug
+    FoundationInitiative:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        focus_area:
+          type: string
+          description: e.g. Healthcare, Rural Education, Women Empowerment, Sustainability
+          maxLength: 120
+        status_label:
+          type: string
+          maxLength: 60
+        date:
+          type: string
+          format: date
+          nullable: true
+        verified_impact_details:
+          type: string
+          description: Verified outcomes and program notes. No unsupported metrics.
+        media:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - focus_area
+      - slug
+      - title
+      - verified_impact_details
+    Group:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        primary_line:
+          type: string
+          maxLength: 200
+        operating_philosophy:
+          type: string
+          maxLength: 120
+        at_a_glance_facts:
+          description: Verified group facts only. No invented metrics.
+        summary:
+          type: string
+        body:
+          type: string
+          description: Sanitised rich text or markdown description
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - name
+      - slug
+    GroupEnum:
+      enum:
+      - leadership
+      - management
+      - business_head
+      - technology
+      - creative
+      - operations
+      - advisor
+      - strategic_expert
+      type: string
+      description: |-
+        * `leadership` - Leadership
+        * `management` - Management
+        * `business_head` - Business Head
+        * `technology` - Technology
+        * `creative` - Creative
+        * `operations` - Operations
+        * `advisor` - Advisor
+        * `strategic_expert` - Strategic Expert
+    Industry:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 140
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+        companies:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        brands:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        platforms:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        foundations:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - brands
+      - companies
+      - foundations
+      - name
+      - platforms
+      - slug
+    KindEnum:
+      enum:
+      - announcement
+      - launch
+      - partnership
+      - leadership
+      - foundation
+      - media_coverage
+      - press_release
+      type: string
+      description: |-
+        * `announcement` - Announcement
+        * `launch` - Launch
+        * `partnership` - Partnership
+        * `leadership` - Leadership
+        * `foundation` - Foundation
+        * `media_coverage` - Media Coverage
+        * `press_release` - Press Release
+    MarketScopeEnum:
+      enum:
+      - india_only
+      - international
+      - regional
+      - unspecified
+      type: string
+      description: |-
+        * `india_only` - India only
+        * `international` - International
+        * `regional` - Regional
+        * `unspecified` - Unspecified
+    MediaAsset:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        file_url:
+          type: string
+          nullable: true
+          readOnly: true
+        folder:
+          $ref: '#/components/schemas/FolderEnum'
+        alt_text:
+          type: string
+          description: Required on upload unless marked decorative.
+          maxLength: 200
+        is_decorative:
+          type: boolean
+          description: Mark true for decorative graphics without informational content.
+        focal_point:
+          type: string
+          description: e.g. 'center', '50% 50%', 'top'
+          maxLength: 40
+        credit_licence:
+          type: string
+          description: Licence and credit notes
+          maxLength: 200
+        width:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        height:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        derivatives:
+          description: Automatic WebP/AVIF and placeholder derivative URLs
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - file_url
+      - id
+      - title
+    NewsItem:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        kind_display:
+          type: string
+          readOnly: true
+        body:
+          type: string
+        publish_at:
+          type: string
+          format: date-time
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - body
+      - kind_display
+      - slug
+      - title
+    OpportunityCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        opportunity_type:
+          $ref: '#/components/schemas/OpportunityTypeEnum'
+        name:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        company:
+          type: string
+          maxLength: 160
+        company_website:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        summary:
+          type: string
+        attachment:
+          type: string
+          format: uri
+          nullable: true
+          description: Opportunity attachment stored in private bucket.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - email
+      - id
+      - name
+      - opportunity_type
+      - summary
+    OpportunityCreateRequest:
+      type: object
+      properties:
+        opportunity_type:
+          $ref: '#/components/schemas/OpportunityTypeEnum'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        company:
+          type: string
+          maxLength: 160
+        company_website:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        summary:
+          type: string
+          minLength: 1
+        attachment:
+          type: string
+          format: binary
+          description: Opportunity attachment stored in private bucket.
+        website:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - name
+      - opportunity_type
+      - summary
+    OpportunityTypeEnum:
+      enum:
+      - founder_proposal
+      - strategic_partnership
+      - supplier_manufacturer
+      - technology_collaboration
+      - market_opportunity
+      - brand_collaboration
+      - investment_related
+      type: string
+      description: |-
+        * `founder_proposal` - Founder Proposal
+        * `strategic_partnership` - Strategic Partnership
+        * `supplier_manufacturer` - Supplier / Manufacturer Opportunity
+        * `technology_collaboration` - Technology Collaboration
+        * `market_opportunity` - Market Opportunity
+        * `brand_collaboration` - Brand Collaboration
+        * `investment_related` - Investment-Related Enquiry
+    Page:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 120
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 160
+        template:
+          type: string
+          maxLength: 40
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Section'
+          readOnly: true
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+        canonical_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - sections
+      - slug
+      - title
+    PaginatedArticleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+    PaginatedBrandList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Brand'
+    PaginatedCapabilityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+    PaginatedCareerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Career'
+    PaginatedCaseStudyList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseStudy'
+    PaginatedCompanyList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    PaginatedDocumentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+    PaginatedEnquiryRouteList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnquiryRoute'
+    PaginatedEventList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    PaginatedFoundationInitiativeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoundationInitiative'
+    PaginatedFoundationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foundation'
+    PaginatedGroupList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    PaginatedIndustryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Industry'
+    PaginatedNewsItemList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewsItem'
+    PaginatedPageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Page'
+    PaginatedPartnerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Partner'
+    PaginatedPersonList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    PaginatedPlatformList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+    PaginatedPressReleaseList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressRelease'
+    PaginatedReportList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Report'
+    PaginatedVentureList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venture'
+    Partner:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 140
+        partner_type:
+          $ref: '#/components/schemas/PartnerTypeEnum'
+        partner_type_display:
+          type: string
+          readOnly: true
+        relationship_description:
+          type: string
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        website_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - name
+      - partner_type_display
+    PartnerTypeEnum:
+      enum:
+      - strategic
+      - supplier
+      - distributor
+      - technology
+      - international
+      - founder
+      type: string
+      description: |-
+        * `strategic` - Strategic Partner
+        * `supplier` - Supplier / Manufacturer
+        * `distributor` - Distributor
+        * `technology` - Technology Partner
+        * `international` - International Trade Partner
+        * `founder` - Ecosystem Founder
+    Person:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 160
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 140
+        title:
+          type: string
+          description: e.g. Founder & Group CEO, Head of Technology
+          maxLength: 140
+        group:
+          $ref: '#/components/schemas/GroupEnum'
+        group_display:
+          type: string
+          readOnly: true
+        bio:
+          type: string
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        expertise:
+          description: List of core competency tags
+        linkedin_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        company_name:
+          type: string
+          readOnly: true
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - bio
+      - company_name
+      - group_display
+      - name
+      - slug
+      - title
+    Platform:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        tagline:
+          type: string
+          description: e.g. 'BUILD • LAUNCH • GROW'
+          maxLength: 120
+        status:
+          type: string
+          description: Initiative status label
+          maxLength: 40
+        purpose:
+          type: string
+        summary:
+          type: string
+        body:
+          type: string
+          description: Sanitised rich text or markdown description
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        cta_label:
+          type: string
+          maxLength: 60
+        capabilities:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        sits_within:
+          allOf:
+          - $ref: '#/components/schemas/CompanyRef'
+          readOnly: true
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - capabilities
+      - name
+      - sits_within
+      - slug
+    PressRelease:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        location:
+          type: string
+          maxLength: 80
+        body:
+          type: string
+        media_contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        downloadable_pdf:
+          type: string
+          format: uri
+          nullable: true
+        publish_at:
+          type: string
+          format: date-time
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - body
+      - slug
+      - title
+    RedirectItem:
+      type: object
+      properties:
+        old_path:
+          type: string
+        new_path:
+          type: string
+        permanent:
+          type: boolean
+      required:
+      - new_path
+      - old_path
+      - permanent
+    Report:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          maxLength: 200
+        year:
+          type: integer
+          maximum: 32767
+          minimum: 0
+        summary:
+          type: string
+        file:
+          type: string
+          format: uri
+        is_public:
+          type: boolean
+        publish_at:
+          type: string
+          format: date-time
+      required:
+      - file
+      - slug
+      - summary
+      - title
+    RevalidateRequestRequest:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+    Section:
+      type: object
+      properties:
+        type:
+          type: string
+          description: e.g. hero, group_intro, at_a_glance, companies, brands, platforms,
+            value_pillars, ecosystem, contact
+          maxLength: 40
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        enabled:
+          type: boolean
+        background:
+          $ref: '#/components/schemas/BackgroundEnum'
+        anchor_id:
+          oneOf:
+          - type: string
+            maxLength: 50
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        content:
+          description: Validated section JSON payload
+      required:
+      - type
+    SitemapItem:
+      type: object
+      properties:
+        url:
+          type: string
+        lastmod:
+          type: string
+        changefreq:
+          type: string
+        priority:
+          type: number
+          format: double
+      required:
+      - url
+    Subscription:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        confirmed:
+          type: boolean
+          readOnly: true
+      required:
+      - confirmed
+      - email
+    SubscriptionRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+      required:
+      - email
+    Venture:
+      type: object
+      properties:
+        slug:
+          type: string
+          maxLength: 180
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        venture_type:
+          type: string
+          maxLength: 80
+        stage_label:
+          type: string
+          maxLength: 80
+        summary:
+          type: string
+        body:
+          type: string
+          description: Sanitised rich text or markdown description
+        seo_title:
+          type: string
+          description: Optimal length 50-60 characters
+          maxLength: 70
+        seo_description:
+          type: string
+          description: Optimal length 150-160 characters
+          maxLength: 170
+      required:
+      - name
+      - slug
+      - venture_type
+    VisibilityEnum:
+      enum:
+      - public
+      - on_request
+      - internal
+      type: string
+      description: |-
+        * `public` - Public Download
+        * `on_request` - On Request
+        * `internal` - Internal Only
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

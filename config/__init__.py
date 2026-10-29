@@ -1,0 +1,1 @@
+# SKAD GROUP Django Configuration
